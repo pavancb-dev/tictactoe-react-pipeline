@@ -66,12 +66,39 @@ jobs:
           sparse-checkout: tictactoe
       - name: Setup Docker
         uses: docker/setup-buildx-action@v3
-      - name: Docker Build
-        run: docker build -t ${{ vars.DOCKERHUB_USERNAME }}/tictactoe:latest .
-      - name: Login to Docker Hub
+      - name: Docker Login
         uses: docker/login-action@v3
         with:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Docker Push
-        run: docker push ${{ vars.DOCKERHUB_USERNAME }}/tictactoe:latest
+      - name: Extract Docker Metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ vars.DOCKERHUB_USERNAME }}/tictactoe
+          tags: |
+            type=sha
+            type=ref,event=branch
+            type=raw,value=latest
+      - name: Build Docker Image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./tictactoe
+          push: false
+          tags: ${{steps.meta.outputs.tags}}
+          labels: ${{steps.meta.outputs.labels}}
+          load: true
+      - name: Run Trivy Scan (SARIF)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ vars.DOCKERHUB_USERNAME }}/tictactoe:latest
+          format: sarif
+          output: trivy-results.sarif
+      - name: Upload Trivy SARIF Report
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-results.sarif
+      - name: Push Docker Image (after scan passes)
+        run: |
+          docker push ${{ vars.DOCKERHUB_USERNAME }}/tictactoe:latest
+          docker push ${{ vars.DOCKERHUB_USERNAME }}/tictactoe:${{ github.sha }}
