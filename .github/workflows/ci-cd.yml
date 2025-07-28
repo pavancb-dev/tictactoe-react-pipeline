@@ -92,8 +92,6 @@ jobs:
           tags: ${{steps.meta.outputs.tags}}
           labels: ${{steps.meta.outputs.labels}}
           load: true
-      - name: Check docker images
-        run: docker image ls
       - name: Run Trivy Scan (SARIF)
         uses: aquasecurity/trivy-action@master
         with:
@@ -107,4 +105,4 @@ jobs:
       - name: Push Docker Image (after scan passes)
         run: |
           docker push ${{ vars.DOCKERHUB_USERNAME }}/tictactoe:latest
-          docker push ${{ vars.DOCKERHUB_USERNAME }}/tictactoe:${{ github.sha }}
+          docker push ${{ vars.DOCKERHUB_USERNAME }}/tictactoe:sha-${{ github.sha }}
