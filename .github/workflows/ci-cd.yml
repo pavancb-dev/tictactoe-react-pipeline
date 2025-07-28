@@ -2,6 +2,10 @@ name: TicTacToe CI-CD
 
 on: workflow_dispatch
 
+permissions:
+  contents: read
+  security-events: write
+
 jobs: 
   pre-build:
     runs-on: ubuntu-latest
