@@ -81,7 +81,7 @@ jobs:
         with:
           images: ${{ vars.DOCKERHUB_USERNAME }}/tictactoe
           tags: |
-            type=sha
+            type=sha,format=long
             type=ref,event=branch
             type=raw,value=latest
       - name: Build Docker Image
