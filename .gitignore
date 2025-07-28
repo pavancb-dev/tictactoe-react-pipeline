@@ -1,0 +1,58 @@
+# Node.js
+node_modules/
+dist/
+.vite/
+*.local
+
+# Optional build output directories
+build/
+out/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment files
+.env
+.env.*.local
+
+# Vite cache
+.vite
+
+# Editor directories and files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# TypeScript
+*.tsbuildinfo
+
+# Optional: Ignore coverage output (if using testing tools like Vitest or Jest)
+coverage/
+
+# Ignore Terraform state and backup files
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars
+*.tfplan
+.terraform/
+.terraform.lock.hcl
+
+# Ignore provider binaries and large files
+**/terraform-provider-*
+
+# Ignore log files
+*.log
+
+# Ignore LFS tracked files
+*.lfs
